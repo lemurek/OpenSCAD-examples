@@ -2,7 +2,7 @@ $fn = 30;
 
 // Copy libraries from OpenSCAD-utils into local OpenSCAD libraries folder
 include <Spirals.scad>
-include <Transforms.scad>
+include <Rotations.scad>
 include <Stands.scad>
 
 function color_pairs() = [
