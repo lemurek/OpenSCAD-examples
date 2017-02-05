@@ -1,44 +1,23 @@
-$fn = 10;
+$fn = 40;
+$margin = 0.5;
+$magic_angle = 63;
 
-$margin = 0.2;
-$epsilon = 0.001;
-$rotate = 63;
+include <Rotations.scad>
 
-module clone(n, axis) {
-    a = 360./n;
-    for (i = [1:n]) {
-        rotate(i*a, axis) children(0);
-    }
-}
-
-module ringA(R, h, d) {
+module cutout_extrude(cut_depth) {
     difference() {
-        cylinder(h=h, r=R+d/2, center = true);
-        cylinder(h=h+$epsilon, r=R-d/2, center = true);
+        rotate_extrude() children(0);
+        clone(5) rotate($magic_angle, [1,0,0]) translate([cut_depth / 2, 0,0]) rotate_extrude() offset($margin) children(0);
     }
 }
 
-module ring(R, h, d) {
-    difference() {
-        intersection() {
-            cylinder(h=h, r=R+d/2, center = true);
-            sphere(R+d/2);
-        }
-        sphere(R-d/2);
-    }
+module wire_ball(cut_depth) {
+    rotate(180) cutout_extrude(cut_depth) children(0);
+    clone(5) rotate(-$magic_angle, [1,0,0]) cutout_extrude(cut_depth) children(0);
 }
 
-module cutout_ring(R, h, d) {
-    difference() {
-        ring(R, h, d);
-        clone(5) rotate($rotate, [1,0,0]) translate([d / 2, 0,0])  
-         ring(R, h + $margin, d + $margin);
-    }
+module ring_profile(R, h, d) {
+    translate([R-d/2, -h/2]) square([d, h]);
 }
 
-module wire_ball(R, h, d) {
-    rotate(180) cutout_ring(R, h, d);
-    clone(5) rotate(-$rotate, [1,0,0]) cutout_ring(R, h, d);
-}
-
-wire_ball(10, 2, 1);
+wire_ball(5) ring_profile(20, 5, 5);
