@@ -1,5 +1,5 @@
 $fn = 40;
-$margin = 0.5;
+$margin = 0.2;
 $magic_angle = 63;
 
 include <Rotations.scad>
@@ -17,7 +17,9 @@ module wire_ball(cut_depth) {
 }
 
 module ring_profile(R, h, d) {
+    translate([R-d/2, 3*h/2]) square([d, h]);
     translate([R-d/2, -h/2]) square([d, h]);
+    translate([R-d/2, -5*h/2]) square([d, h]);
 }
 
-wire_ball(5) ring_profile(20, 5, 5);
+wire_ball(2) ring_profile(20, 1, 2);
